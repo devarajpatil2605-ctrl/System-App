@@ -1,0 +1,22 @@
+{
+  "name": "THE SYSTEM — Physique Ascension Tracker",
+  "short_name": "THE SYSTEM",
+  "description": "Solo Leveling style workout, quest, and nutrition tracker.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05070c",
+  "theme_color": "#05070c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
