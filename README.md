@@ -1,61 +1,44 @@
-# THE SYSTEM — Physique Ascension Tracker
+# SHADOW SYSTEM: DEV
 
-A Solo Leveling-style workout, quest, and nutrition tracker. Log sets with weight/reps,
-see your previous session's numbers inline, track meals with auto-calculated macros,
-and level up your hunter stats as you train.
+A mobile-first, Solo Leveling-inspired personal progression tracker for Dev. The UI uses original HUD styling and effects; it does not bundle copyrighted anime footage, official artwork, logos, or soundtrack recordings.
 
-## Run locally
+## Modules
 
-```bash
-npm install
-npm run dev
-```
+- System dashboard: daily quests, unresolved quest prompt, calorie overview, due revision topics, body summary, and hunter score.
+- Nutrition: calorie and macro diary, local starter foods, custom foods, search via Open Food Facts, optional USDA FoodData Central search, serving scaling, and available nutrient details.
+- Revision: editable Subject → Heading → Topic hierarchy with configurable Day 1 / 3 / 7 / 14 / 30 / 90 spaced-repetition stages and per-topic notes/history.
+- Body status: weight entries, goal settings, graph, and date-specific history.
+- Quest board: recurring and one-time quests, persistent occurrences, completion history, and auditable XP ledger.
+- Hunter status: E/D/C/B/A/S rank, consistency score, levels, milestones, and progression settings.
+- Settings & portability: targets, thresholds, interval customisation, reminder settings, appearance, local JSON backup and restore.
 
-Opens at `http://localhost:5173`.
+## Data and nutrition sources
 
-## Deploy to Netlify
+Essential tracker data is saved locally in the app's browser/WebView storage. Open Food Facts searches are performed only when you search and require an internet connection. USDA FoodData Central search is optional and requires an API key entered locally in Settings. Food values are reference data per 100 g and vary by preparation and product; missing nutrient values are not represented as zero. The included starter catalogue is small and is not a complete branded-food database.
 
-### Option A — drag and drop
-1. Run `npm install && npm run build` locally (or let Netlify do it — see Option B).
-2. Drag the generated `dist` folder onto https://app.netlify.com/drop
+## Build a web preview
 
-### Option B — connect a Git repo (recommended, gives you auto-deploys)
-1. Push this folder to a GitHub/GitLab repo.
-2. In Netlify: **Add new site → Import an existing project**.
-3. Netlify will auto-detect the settings from `netlify.toml`:
-   - Build command: `npm run build`
-   - Publish directory: `dist`
-4. Click **Deploy**.
+Requires Node.js 20 or newer.
 
-## Notes on data storage
+    npm install
+    npm run build
+    npm test
+    npm run dev
 
-This app stores all your data (workouts, meals, XP, routine edits) in your browser's
-`localStorage`. That means:
-- Your data stays on the device/browser you use it in — it does not sync across devices.
-- Clearing your browser's site data will erase your progress.
-- There's no backend, no login, and no data leaves your browser.
+## Build the Android APK
 
-If you later want cross-device sync, that requires adding a real backend (e.g. Supabase
-or Firebase) — happy to help wire that in when you're ready.
+The repository's GitHub Actions workflow builds an Android debug APK using Capacitor. Open Actions → Build Shadow System Android APK and run the workflow if it is not already running. After success, download the shadow-system-dev-debug-apk artifact and extract app-debug.apk.
 
-## Notifications
+The automated build creates the Android wrapper, installs the Android SDK, syncs the Vite build into the native project, runs assembleDebug, and uploads the generated APK. A debug APK is suitable for installation after allowing app installs from the source used on your device; a signed release build requires a separate keystore configuration.
 
-Browser push notifications require you to grant permission (you'll get a prompt on first
-load) and work best when the app is installed to your home screen ("Add to Home Screen"
-from your mobile browser's share/menu button), since that runs it in standalone app mode.
+## Android notification caveats
 
-## Project structure
+The app uses Capacitor Local Notifications for native revision reminders. Delivery is subject to Android notification permission, device power-management rules, and alarm scheduling limits. In the app, grant notification permission from Settings. Browser notifications cannot guarantee background delivery.
 
-```
-├── index.html          # Entry HTML, PWA manifest links
-├── package.json
-├── vite.config.js
-├── netlify.toml         # Netlify build settings
-├── public/
-│   ├── manifest.json    # PWA manifest (installable "app")
-│   ├── icon-192.png
-│   └── icon-512.png
-└── src/
-    ├── main.jsx         # React root mount
-    └── App.jsx          # The entire System app (UI, state, storage, food DB)
-```
+## Privacy and assets
+
+The core tracker does not require an account. No analytics or advertising SDKs are included. API keys entered in Settings are stored only in local app storage, not in source code. Use only food data and media assets whose licensing terms permit the intended use.
+
+## Current verification
+
+GitHub Actions runs a production web build, smoke-checks the generated assets, generates/syncs the Android wrapper, and builds the debug APK. Check the actual workflow run before treating the APK as delivered.
