@@ -32,6 +32,10 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          # The action's default includes the removed legacy "tools" package,
+          # which makes sdkmanager exit 1 on current Android SDK repositories.
+          packages: "platform-tools"
 
       - name: Install required Android SDK packages
         run: |
