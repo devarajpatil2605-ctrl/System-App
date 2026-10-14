@@ -1,0 +1,13 @@
+{
+  "appId": "com.devarajpatil.shadowSystem",
+  "appName": "Shadow System Dev",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon_config_sample",
+      "iconColor": "#48dcff",
+      "sound": "system-notification.wav"
+    }
+  }
+}
