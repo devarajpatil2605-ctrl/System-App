@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Capacitor } from '@capacitor/core';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { LocalNotifications } from '@capacitor/local-notifications';
 import './App.css';
 
@@ -196,7 +197,23 @@ export default function App() {
   const doneToday = todayOcc.filter(o=>o.status==='completed').length;
   const lastWeight = [...data.weights].sort((a,b)=>b.date.localeCompare(a.date))[0];
 
-  const notifyToast = (message) => { setToast(message); window.setTimeout(()=>setToast(''),2600); };
+  const notifyToast = (message) => {
+    setToast(message); window.setTimeout(()=>setToast(''),2600);
+    if(data.settings.sound) {
+      try {
+        const AudioCtx=window.AudioContext||window.webkitAudioContext;
+        if(AudioCtx) {
+          const ctx=new AudioCtx(); const oscillator=ctx.createOscillator(); const gain=ctx.createGain();
+          oscillator.type='sine'; oscillator.frequency.setValueAtTime(640,ctx.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(880,ctx.currentTime+0.075);
+          gain.gain.setValueAtTime(0.035,ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.13);
+          oscillator.connect(gain); gain.connect(ctx.destination); oscillator.start(); oscillator.stop(ctx.currentTime+0.14);
+          oscillator.onended=()=>ctx.close();
+        }
+      } catch(e) { /* Audio is optional; keep every tracker action usable without it. */ }
+    }
+    if(data.settings.haptics && Capacitor.isNativePlatform()) Haptics.impact({style:ImpactStyle.LIGHT}).catch(()=>{});
+  };
   const changeData = (fn) => setData(prev => fn(prev));
   const awardXp = (eventKey, xp, reason) => {
     changeData(prev=>{
